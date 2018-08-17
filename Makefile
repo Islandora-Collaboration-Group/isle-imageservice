@@ -10,6 +10,6 @@ docker_build:
 	--build-arg BUILD_DATE=$(DATE_RFC3339) \
 	--build-arg VCS_REF=`git rev-parse --short HEAD` \
 	--build-arg VERSION=$(VERSION) \
-	--tag isle-imageservices:$(TAG) .
+	--tag isle-imageservice:$(TAG) .
 
 default: docker_build

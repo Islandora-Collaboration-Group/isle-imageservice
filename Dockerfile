@@ -8,7 +8,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.description="Cantaloupe IIIF to serve all your image needs." \
       org.label-schema.url="https://islandora-collaboration-group.github.io" \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-iiif" \
+      org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-imageservice" \
       org.label-schema.vendor="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com" \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0" \
@@ -131,8 +131,10 @@ RUN echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 boolean tru
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer
 
-ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
-    JRE_HOME=/usr/lib/jvm/java-8-oracle/jre
+ENV CANTALOUPE_HOME=/usr/local/cantaloupe \
+    JAVA_HOME=/usr/lib/jvm/java-8-oracle \
+    JRE_HOME=/usr/lib/jvm/java-8-oracle/jre \
+    JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200"
 
 COPY rootfs /
 
