@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM benjaminrosner/isle-ubuntu-basebox:latest
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -16,28 +16,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       traefik.port="8182" \
       traefik.backend="isle-imageservice"
 
-## S6-Overlay @see: https://github.com/just-containers/s6-overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v1.21.4.0/s6-overlay-amd64.tar.gz /tmp/
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
-    rm /tmp/s6-overlay-amd64.tar.gz
-
-###
-# Dependencies 
-RUN GEN_DEP_PACKS="ca-certificates \
-    dnsutils \
-    wget \
-    curl\
-    git \
-    unzip" && \
-    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends $GEN_DEP_PACKS && \
-    ## Cleanup phase.
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-###
-# FFMPEG and GhostScript 
+## FFMPEG and GhostScript 
 RUN FFMPEG_GS_PACKS="ffmpeg \
     ffmpeg2theora \
     libavcodec-extra \
@@ -51,8 +30,7 @@ RUN FFMPEG_GS_PACKS="ffmpeg \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-###
-# ImageMagick and OpenJPG
+## ImageMagick and OpenJPG
 RUN BUILD_DEPS="build-essential \
     cmake \
     pkg-config \
@@ -74,7 +52,7 @@ RUN BUILD_DEPS="build-essential \
     libwebp-dev \
     libwmf-dev \
     zlib1g-dev" && \
-    ## These are unused and actually install by libavcodec-extra, I believe.
+    ## I believe these are unused and actually install by libavcodec-extra.
     IMAGEMAGICK_LIBS_EXTENDED="libfontconfig \
     libfreetype6-dev" && \
     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
@@ -94,7 +72,7 @@ RUN BUILD_DEPS="build-essential \
     wget https://www.imagemagick.org/download/ImageMagick.tar.gz && \
     tar xf ImageMagick.tar.gz && \
     cd ImageMagick-* && \
-    ./configure --enable-hdri --with-quantum-depth=16 --without-x --without-magick-plus-plus --without-perl --with-rsvg && \
+    ./configure --enable-hdri --with-quantum-depth=16 --without-magick-plus-plus --without-perl --with-rsvg && \
     make && \
     make install && \
     ldconfig && \
@@ -102,9 +80,9 @@ RUN BUILD_DEPS="build-essential \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-###
-# Cantaloupe 3.4.3 because I failed 4.x, and also failed to get this running as of 2018-08-05. Giving up for now.
-# Ultimate thanks to Diego Pino Navarro's work on the Islandora Vagrant, for which the properties and delegates are copied from.
+## Cantaloupe 3.4.3
+# Ultimate thanks to Diego Pino Navarro and the Islandora Community for work on the Islandora Vagrant.
+# The properties and delegates are copied and modified slightly from the Islandora Vagrant!
 RUN cd /tmp && \
     wget https://github.com/medusa-project/cantaloupe/releases/download/v3.4.3/Cantaloupe-3.4.3.zip && \
     unzip Cantaloupe-*.zip && \
@@ -114,21 +92,7 @@ RUN cd /tmp && \
     ## Cleanup Phase.
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-## JAVA PHASE
-## Oracle Java 8, default.
-RUN cd /tmp && \
-    curl -L -b "oraclelicense=a" -O http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/server-jre-8u181-linux-x64.tar.gz && \
-    tar xf server-jre-8u181-linux-x64.tar.gz && \
-    mkdir -p /usr/lib/jvm && \
-    mv jdk1.8.0_181 /usr/lib/jvm && \
-    update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.8.0_181/bin/java" 1010 && \
-    update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.8.0_181/bin/javac" 1010 && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
-
 ENV CANTALOUPE_HOME=/usr/local/cantaloupe \
-    JAVA_HOME=/usr/lib/jvm/jdk1.8.0_181 \
-    JRE_HOME=/usr/lib/jvm/jdk1.8.0_181/jre \
-    PATH=$PATH:/usr/lib/jvm/jdk1.8.0_181/bin:/usr/lib/jvm/jdk1.8.0_181/jre/bin \
     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx8G -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200"
 
 COPY rootfs /

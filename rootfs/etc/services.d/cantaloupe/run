@@ -1,3 +1,3 @@
 #!/usr/bin/with-contenv sh
 
-exec java $JAVA_OPTS -Dcantaloupe.config=/usr/local/cantaloupe/cantaloupe.properties -jar /usr/local/cantaloupe/Cantaloupe-3.4.3.war
+exec java $JAVA_OPTS -Dcantaloupe.config=$CANTALOUPE_HOME/cantaloupe.properties -jar $CANTALOUPE_HOME/Cantaloupe-3.4.3.war
