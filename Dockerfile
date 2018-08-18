@@ -109,32 +109,27 @@ RUN cd /tmp && \
     wget https://github.com/medusa-project/cantaloupe/releases/download/v3.4.3/Cantaloupe-3.4.3.zip && \
     unzip Cantaloupe-*.zip && \
     rm Cantaloupe-3.4.3/*.sample && \
-    mkdir -p /usr/local/cantaloupe /usr/local/cantaloupe/temp /var/log/cantaloupe && \
+    mkdir -p /usr/local/cantaloupe /usr/local/cantaloupe/temp /usr/local/cantaloupe/cache /var/log/cantaloupe && \
     cp Cantaloupe-3.4.3/* /usr/local/cantaloupe && \
     ## Cleanup Phase.
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ## JAVA PHASE
 ## Oracle Java 8, default.
-RUN echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 boolean true' | debconf-set-selections && \
-    LAZY_PACK="software-properties-common" && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends -o APT::Get::Install-Automatic=true $LAZY_PACK && \
-    add-apt-repository -y ppa:webupd8team/java && \
-    JAVA_PACKAGES="oracle-java8-installer \
-    oracle-java8-set-default" && \
-    apt-get update && \
-    apt-get install --no-install-recommends -y $JAVA_PACKAGES && \
-    ## Cleanup phase.
-    add-apt-repository --remove -y ppa:webupd8team/java && \
-    apt-get purge -y --auto-remove openjdk* $LAZY_PACK && \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer
+RUN cd /tmp && \
+    curl -L -b "oraclelicense=a" -O http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/server-jre-8u181-linux-x64.tar.gz && \
+    tar xf server-jre-8u181-linux-x64.tar.gz && \
+    mkdir -p /usr/lib/jvm && \
+    mv jdk1.8.0_181 /usr/lib/jvm && \
+    update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.8.0_181/bin/java" 1010 && \
+    update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.8.0_181/bin/javac" 1010 && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 ENV CANTALOUPE_HOME=/usr/local/cantaloupe \
-    JAVA_HOME=/usr/lib/jvm/java-8-oracle \
-    JRE_HOME=/usr/lib/jvm/java-8-oracle/jre \
-    JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200"
+    JAVA_HOME=/usr/lib/jvm/jdk1.8.0_181 \
+    JRE_HOME=/usr/lib/jvm/jdk1.8.0_181/jre \
+    PATH=$PATH:/usr/lib/jvm/jdk1.8.0_181/bin:/usr/lib/jvm/jdk1.8.0_181/jre/bin \
+    JAVA_OPTS="-Djava.awt.headless=true -server -Xmx8G -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200"
 
 COPY rootfs /
 
