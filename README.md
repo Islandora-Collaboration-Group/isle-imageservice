@@ -24,7 +24,7 @@ Important Paths:
   - $JAVA_HOME is `/usr/lib/jvm/java-8-oracle`
 
 ## Java Options
-  - $JAVA_OPTS are `-Djava.awt.headless=true -server -Xmx4096M -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200`
+  - $JAVA_OPTS are `-Djava.awt.headless=true -server -Xmx8G -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200`
 
 ## Generic Usage
 
