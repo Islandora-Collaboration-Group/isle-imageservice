@@ -5,9 +5,9 @@ Designed as an IIIF compliant image server for ISLE.
 
 Based on:  
  - [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/)
-    - Ubuntu 18.04 "Bionic"
-    - General Dependencies (@see [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/))
-    - Oracle Java
+    - Ubuntu 18.04 "Bionic" (@see [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/))
+      - General Dependencies
+      - Oracle Java
  - [Cantaloupe 3.4.3](https://medusa-project.github.io/cantaloupe/) an IIIF comliant open-source dynamic image server
 
 Contains and Includes:
