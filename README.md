@@ -29,7 +29,7 @@ Important Paths:
 ## Generic Usage
 
 ```
-docker run -it -p "8182:8182" --rm benjaminrosner/isle-imageservice:development bash
+docker run -it -p "8182:8182" --rm benjaminrosner/isle-imageservice bash
 ```
 
 ## Cantaloupe Default Admin User
