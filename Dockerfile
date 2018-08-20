@@ -97,6 +97,6 @@ ENV CANTALOUPE_HOME=/usr/local/cantaloupe \
 
 COPY rootfs /
 
-EXPOSE 8182
+EXPOSE 8080
 
 ENTRYPOINT ["/init"]
