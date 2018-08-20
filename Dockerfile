@@ -1,4 +1,4 @@
-FROM benjaminrosner/isle-ubuntu-basebox:latest
+FROM benjaminrosner/isle-ubuntu-basebox:serverjre8
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -13,7 +13,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0" \
       traefik.enable="true" \
-      traefik.port="8182" \
+      traefik.port="8080" \
       traefik.backend="isle-imageservice"
 
 ## FFMPEG and GhostScript 

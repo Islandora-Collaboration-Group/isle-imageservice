@@ -7,7 +7,7 @@ Based on:
  - [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/)
     - Ubuntu 18.04 "Bionic" (@see [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/))
       - General Dependencies
-      - Oracle Java
+      - Oracle Java Server JRE 8
  - [Cantaloupe 3.4.3](https://medusa-project.github.io/cantaloupe/) an IIIF comliant open-source dynamic image server
 
 Contains and Includes:
@@ -19,9 +19,8 @@ Contains and Includes:
 
 Size: 887MB
 
-Important Paths:
+## Important Paths
   - $CANTALOUPE_HOME is `/usr/local/cantaloupe`
-  - $JAVA_HOME is `/usr/lib/jvm/java-8-oracle`
 
 ## Java Options
   - $JAVA_OPTS are `-Djava.awt.headless=true -server -Xmx8G -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200`
